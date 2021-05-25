@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <property name="log.base" value="${ucube-iot.base}/log" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender" target="System.out">
+        <encoder charset="UTF-8">
+            <pattern>%date [%-5level] [%-4relative] [%logger{20}] - %message%n</pattern>
+        </encoder>
+        <target>System.out</target>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base}/iot.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>iot-%d{yyyyMMdd}-%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>3</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%-5level] [%-4relative] [%logger{20}] - %message%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <file>${log.base}/iot.error</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>iot-%d{yyyyMMdd}-%i.error</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%-5level] [%thread] [%logger{20}] - %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- MongoDB -->
+    <logger name="org.apache.camel.component.mongodb.converters">
+        <level value="error" />
+    </logger>
+
+    <!-- Camel -->
+    <logger name="org.apache.camel">
+        <level value="info" />
+    </logger>
+
+    <!-- OPC -->
+    <logger name="org.jinterop">
+        <level value="error" />
+    </logger>
+    <logger name="com.summit">
+        <level value="info" />
+    </logger>
+
+    <!-- u-CUBE EAI -->
+    <logger name="com.poscoict.eai">
+        <level value="debug" />
+    </logger>
+
+    <!-- u-CUBE IoT -->
+    <logger name="com.ucube.iot">
+        <level value="debug" />
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC" />
+        <appender-ref ref="ERROR" />
+    </root>
+
+</configuration>
